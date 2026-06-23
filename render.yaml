@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: fridge2fork
+    name: bonnie-fridge
     runtime: python
     plan: free
     buildCommand: pip install -r backend/requirements.txt

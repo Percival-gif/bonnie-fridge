@@ -14,3 +14,7 @@ build/
 .vscode/
 .idea/
 *.log
+
+# 面试相关文件（不上传 GitHub）
+docs/07-面试话术指南.md
+private/

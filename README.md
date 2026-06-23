@@ -1,4 +1,4 @@
-# 🧊 Fridge2Fork · 冰箱侦探
+# 🧊 Bonnie Fridge · 冰箱侦探
 
 > 拍一张冰箱照片，AI 识别食材并推荐"现在就能做的菜"
 
@@ -64,7 +64,7 @@
 
 ### 3. 创建 Web Service
 1. Dashboard → **New +** → **Web Service**
-2. 选择你的 `fridge2fork` 仓库
+2. 选择你的 `bonnie-fridge` 仓库
 3. Render 会自动识别 `render.yaml` 配置
 
 ### 4. 设置环境变量
@@ -75,7 +75,7 @@ DAILY_LIMIT=10
 ```
 
 ### 5. 点击 Deploy
-等待 2-3 分钟，获得线上地址：`https://fridge2fork-xxxxx.onrender.com`
+等待 2-3 分钟，获得线上地址：`https://bonnie-fridge-xxxxx.onrender.com`
 
 > ⚠️ **注意**：Render Free 服务 15 分钟无访问会休眠，首次访问可能需要 30 秒唤醒。
 
@@ -112,7 +112,7 @@ python -m http.server 5500
 ## 📁 项目结构
 
 ```
-fridge2fork/
+bonnie-fridge/
 ├── backend/
 │   ├── main.py              # FastAPI 入口
 │   ├── routers/
@@ -161,7 +161,7 @@ fridge2fork/
 
 ## 📄 开源协议
 
-MIT License © 2026 Fridge2Fork
+MIT License © 2026 Bonnie Fridge
 
 ---
 

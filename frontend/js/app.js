@@ -474,7 +474,7 @@ function copyShoppingList() {
         showToast('清单为空');
         return;
     }
-    const text = '【Fridge2Fork 购物清单】\n' +
+    const text = '【Bonnie Fridge 购物清单】\n' +
         shoppingList.filter(s => !s.checked).map(s => `□ ${s.name} ${s.amount}`).join('\n');
 
     navigator.clipboard.writeText(text).then(() => {

@@ -12,8 +12,8 @@ env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
 load_dotenv(env_path)
 
 app = FastAPI(
-    title="Fridge2Fork API",
-    description="冰箱侦探 - AI 食材识别与菜谱推荐",
+    title="Bonnie Fridge API",
+    description="Bonnie Fridge - AI 食材识别与菜谱推荐",
     version="1.0.0"
 )
 
@@ -42,7 +42,7 @@ async def root():
     if index_file.exists():
         return FileResponse(str(index_file))
     return {
-        "message": "Fridge2Fork 后端服务运行中",
+        "message": "Bonnie Fridge 后端服务运行中",
         "docs": "/docs",
         "version": "1.0.0"
     }
