@@ -45,6 +45,9 @@ async function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
+    // 重置 input，允许再次上传（包括同一文件）
+    event.target.value = '';
+
     // 预览
     const reader = new FileReader();
     reader.onload = (e) => {
