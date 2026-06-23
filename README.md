@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🧊 Bonnie Fridge · 冰箱侦探
 
 > 拍一张冰箱照片，AI 识别食材并推荐"现在就能做的菜"
@@ -170,3 +171,7 @@ MIT License © 2026 Bonnie Fridge
 - [Moonshot AI](https://moonshot.cn) 提供 Kimi 多模态 API
 - [FastAPI](https://fastapi.tiangolo.com) 提供高效后端框架
 - [Tailwind CSS](https://tailwindcss.com) 提供原子化 CSS 方案
+=======
+# bonnie-fridge
+📸 拍一张冰箱内部照片，AI 识别食材 🍳 推荐「能做的菜」，考虑你的口味偏好和 dietary goals 🛒 自动生成缺料购物清单
+>>>>>>> 6a1de7b1d413e88ce98f12ff726a104eb36f3cc5
