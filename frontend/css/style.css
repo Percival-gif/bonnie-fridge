@@ -1,0 +1,151 @@
+body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 4px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+/* 食材标签 */
+.ingredient-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+.ingredient-tag.high {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+.ingredient-tag.medium {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+.ingredient-tag.low {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+.ingredient-tag.user {
+    background: #e0e7ff;
+    color: #3730a3;
+    border: 1px solid #c7d2fe;
+}
+
+/* 菜谱卡片 */
+.recipe-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #f3f4f6;
+    padding: 16px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.recipe-card:hover {
+    border-color: #10b981;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+}
+.recipe-card .match-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.match-high {
+    background: #d1fae5;
+    color: #065f46;
+}
+.match-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+.match-low {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* 食材状态 */
+.ingredient-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 2px 0;
+}
+.ingredient-status .check {
+    color: #10b981;
+    font-weight: bold;
+}
+.ingredient-status .cross {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+/* 步骤列表 */
+.step-list {
+    counter-reset: step;
+}
+.step-list li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+}
+.step-list li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background: #10b981;
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 按钮点击反馈 */
+button:active {
+    transform: scale(0.97);
+}
+
+/* 语音输入动画 */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+.voice-recording {
+    animation: pulse 1.5s infinite;
+}

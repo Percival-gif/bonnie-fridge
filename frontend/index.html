@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fridge2Fork · 冰箱侦探</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-xl relative">
+        <!-- 头部 -->
+        <header class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 rounded-b-3xl">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-2xl">🧊</span>
+                <h1 class="text-xl font-bold">Fridge2Fork</h1>
+            </div>
+            <p class="text-emerald-100 text-sm">拍一张冰箱照片，AI 帮你做饭</p>
+        </header>
+
+        <main class="p-4 pb-24 space-y-4">
+            <!-- 拍照区域 -->
+            <section id="camera-section" class="bg-white rounded-2xl border-2 border-dashed border-emerald-200 p-6 text-center cursor-pointer hover:border-emerald-400 transition" onclick="document.getElementById('file-input').click()">
+                <input type="file" id="file-input" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
+                <div id="upload-placeholder">
+                    <div class="text-4xl mb-2">📸</div>
+                    <p class="text-gray-600 font-medium">点击拍照或上传冰箱照片</p>
+                    <p class="text-gray-400 text-xs mt-1">支持 JPG、PNG 格式</p>
+                </div>
+                <img id="preview-image" class="hidden w-full rounded-xl object-cover max-h-64 mx-auto" alt="冰箱预览">
+                <div id="upload-loading" class="hidden mt-4">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mx-auto"></div>
+                    <p class="text-emerald-600 text-sm mt-2">AI 正在识别食材...</p>
+                </div>
+            </section>
+
+            <!-- 识别结果 -->
+            <section id="ingredients-section" class="hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-bold text-gray-800">🥬 识别到的食材</h2>
+                    <button onclick="showSupplementModal()" class="text-emerald-600 text-sm font-medium">+ 补充食材</button>
+                </div>
+                <div id="ingredients-list" class="space-y-2"></div>
+                <div class="flex gap-2 mt-3">
+                    <button onclick="saveInventory()" class="flex-1 bg-emerald-500 text-white py-2 rounded-xl text-sm font-medium hover:bg-emerald-600 transition">💾 保存库存</button>
+                    <button onclick="clearInventory()" class="px-4 bg-gray-100 text-gray-600 py-2 rounded-xl text-sm hover:bg-gray-200 transition">清空</button>
+                </div>
+            </section>
+
+            <!-- 用户画像 -->
+            <section id="profile-section" class="bg-amber-50 rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-bold text-gray-800 text-sm">👤 我的饮食偏好</h2>
+                    <button onclick="showProfileModal()" class="text-amber-600 text-xs font-medium">编辑</button>
+                </div>
+                <div id="profile-display" class="flex flex-wrap gap-2 text-xs">
+                    <span class="bg-white px-2 py-1 rounded-full text-gray-600 border">口味：不限制</span>
+                    <span class="bg-white px-2 py-1 rounded-full text-gray-600 border">目标：无特殊</span>
+                </div>
+            </section>
+
+            <!-- 推荐菜谱 -->
+            <section id="recipes-section" class="hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-bold text-gray-800">🍳 推荐菜谱</h2>
+                    <span id="recipe-count" class="text-xs text-gray-400"></span>
+                </div>
+                <div id="recipes-list" class="space-y-3"></div>
+            </section>
+
+            <!-- 反向查询 -->
+            <section class="bg-gray-50 rounded-2xl p-4">
+                <h2 class="font-bold text-gray-800 text-sm mb-2">🔍 想做某道菜？</h2>
+                <div class="flex gap-2">
+                    <input type="text" id="search-dish" placeholder="输入菜名，如：红烧肉" class="flex-1 px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-emerald-400">
+                    <button onclick="checkDish()" class="bg-gray-800 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-gray-900 transition">查询</button>
+                </div>
+                <div id="search-result" class="mt-3 hidden"></div>
+            </section>
+
+            <!-- 购物清单 -->
+            <section id="shopping-section" class="hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-bold text-gray-800">🛒 购物清单</h2>
+                    <button onclick="copyShoppingList()" class="text-emerald-600 text-sm font-medium">📋 复制</button>
+                </div>
+                <div id="shopping-list" class="bg-white rounded-xl border border-gray-100 p-3 space-y-2"></div>
+            </section>
+        </main>
+
+        <!-- 底部导航 -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-around items-center max-w-md mx-auto z-10">
+            <button onclick="scrollToSection('camera-section')" class="flex flex-col items-center gap-1 text-emerald-600">
+                <span class="text-xl">📸</span>
+                <span class="text-xs">拍照</span>
+            </button>
+            <button onclick="getRecommendations()" class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-600 transition">
+                <span class="text-xl">🍳</span>
+                <span class="text-xs">推荐</span>
+            </button>
+            <button onclick="showShoppingList()" class="flex flex-col items-center gap-1 text-gray-400 hover:text-emerald-600 transition">
+                <span class="text-xl">🛒</span>
+                <span class="text-xs">清单</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- 补充食材弹窗 -->
+    <div id="supplement-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">补充食材</h3>
+                <button onclick="closeModal('supplement-modal')" class="text-gray-400 text-2xl">&times;</button>
+            </div>
+            <textarea id="supplement-input" placeholder="输入食材，每行一个：&#10;冷冻牛排 2块&#10;昨天买的豆腐 1盒" class="w-full h-32 p-3 rounded-xl border border-gray-200 text-sm resize-none focus:outline-none focus:border-emerald-400 mb-3"></textarea>
+            <div class="flex gap-2">
+                <button onclick="addSupplements()" class="flex-1 bg-emerald-500 text-white py-3 rounded-xl font-medium hover:bg-emerald-600 transition">添加</button>
+                <button onclick="startVoiceInput()" class="px-4 bg-amber-100 text-amber-700 py-3 rounded-xl font-medium">🎤 语音</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑画像弹窗 -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg">编辑饮食偏好</h3>
+                <button onclick="closeModal('profile-modal')" class="text-gray-400 text-2xl">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-sm text-gray-600 block mb-1">口味偏好</label>
+                    <select id="profile-taste" class="w-full p-2 rounded-xl border border-gray-200 text-sm">
+                        <option value="不限制">不限制</option>
+                        <option value="清淡">清淡</option>
+                        <option value="微辣">微辣</option>
+                        <option value="重辣">重辣</option>
+                        <option value="酸甜">酸甜</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 block mb-1">饮食目标</label>
+                    <select id="profile-goal" class="w-full p-2 rounded-xl border border-gray-200 text-sm">
+                        <option value="无特殊">无特殊</option>
+                        <option value="减脂">减脂</option>
+                        <option value="增肌">增肌</option>
+                        <option value="控糖">控糖</option>
+                        <option value="素食">素食</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 block mb-1">烹饪时长</label>
+                    <select id="profile-time" class="w-full p-2 rounded-xl border border-gray-200 text-sm">
+                        <option value="不限制">不限制</option>
+                        <option value="15分钟">15分钟以内</option>
+                        <option value="30分钟">30分钟以内</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 block mb-1">常备食材（用逗号分隔）</label>
+                    <input type="text" id="profile-staples" placeholder="盐, 糖, 油, 生抽" class="w-full p-2 rounded-xl border border-gray-200 text-sm">
+                </div>
+            </div>
+            <button onclick="saveProfile()" class="w-full bg-emerald-500 text-white py-3 rounded-xl font-medium mt-4 hover:bg-emerald-600 transition">保存</button>
+        </div>
+    </div>
+
+    <!-- 菜谱详情弹窗 -->
+    <div id="recipe-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center overflow-y-auto">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 my-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="recipe-modal-title" class="font-bold text-lg"></h3>
+                <button onclick="closeModal('recipe-modal')" class="text-gray-400 text-2xl">&times;</button>
+            </div>
+            <div id="recipe-modal-content" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2"></div>
+            <div class="flex gap-2 mt-4">
+                <button onclick="cookThisDish()" class="flex-1 bg-emerald-500 text-white py-3 rounded-xl font-medium hover:bg-emerald-600 transition">👨‍🍳 我要做这道菜</button>
+                <button onclick="addToShoppingListFromModal()" class="px-4 bg-amber-100 text-amber-700 py-3 rounded-xl font-medium">+清单</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full text-sm opacity-0 pointer-events-none transition-opacity duration-300 z-50"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
